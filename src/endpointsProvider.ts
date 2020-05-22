@@ -61,12 +61,12 @@ export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 	}
 
 	refreshWithoutLoading(): void {
-		this._onDidChangeTreeData.fire();
+		this._onDidChangeTreeData.fire(undefined);
 	} 
 
 	refresh(): void {
 		this.getAllEndpoints();
-		this._onDidChangeTreeData.fire();
+		this._onDidChangeTreeData.fire(undefined);
 	}
 
 	getTreeItem(element: Endpoint): vscode.TreeItem {
