@@ -10,34 +10,37 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:endpoints.helloWorld"
+		"onView:endpoints" 
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "endpoints.helloWorld",
-				"title": "Hello World"
+				"command": "endpoints.refreshEntry",
+				"title": "Refresh"
+			},
+			{
+				"command": "endpoints.openFile",
+				"title": "Open"
 			}
 		],
-
-		"viewsContainers": {
-			"activitybar": [
-			  {
-				"id": "endpoints",
-				"title": "Endpoints",
-				"icon": ""
-			  }
-			]
-		  },
-		  "views": {
+		"views": {
 			"explorer": [
 			  {
-				"id": "Endpoints",
-				"name": "endpoints"
+				"id": "endpoints",
+				"name": "Endpoints"
 			  }
 			]
-		  }
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "endpoints.refreshEntry",
+					"when": "view == endpoints",
+					"group": "navigation"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
