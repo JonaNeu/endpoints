@@ -10,33 +10,32 @@ export class TypescriptEndpointParser implements EndpointParser {
     private expressAppName = 'app|route|router';
 
     // we search for patterns .get("", function) and make sure somewhere before we got the app name
-    private getPattern: RegExp | undefined;
+    private getPattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}get[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
     // we search for patterns like .route("").get()
-    private getPattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.get/gi
+    private getPattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.get/gi;
 
-    private postPattern: RegExp | undefined;
+    private postPattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}post[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
     private postPattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.post/gi
 
-    private putPattern: RegExp | undefined;
+    private putPattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}put[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
     private putPattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.put/gi
 
-
-    private patchPattern: RegExp | undefined;
+    private patchPattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}patch[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
     private patchPattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.patch/gi
 
-    private deletePattern: RegExp | undefined;
-    private deletePattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.delete/gi
+    private deletePattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}delete[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
+    private deletePattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.delete/gi;
 
-    private headPattern: RegExp | undefined;
+    private headPattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}head[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
     private headPattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.head/gi
 
-    private connectPattern: RegExp | undefined;
+    private connectPattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}connect[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
     private connectPattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.connect/gi
 
-    private optionsPattern: RegExp | undefined;
+    private optionsPattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}options[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
     private optionsPattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.options/gi
 
-    private tracePattern: RegExp | undefined;
+    private tracePattern = /(?<=(?:app|route|router)[\s\S]{0,10})\.[\s\S]{0,10}trace[\s\S]{0,10}\((?:'|")([\s\S]*?)('|")[,]{1}/gi;
     private tracePattern2 = /\.route(?!r)[\s\S]*?\([\s\S]*?(?:'|")([\s\S]*?)('|")[\s\S]*?\)[\s\S]*?\.trace/gi
 
     constructor() {
@@ -175,7 +174,7 @@ export class TypescriptEndpointParser implements EndpointParser {
      */
     private updatePatterns() {
 
-        let temp = workspace.getConfiguration().get('endpoints.express.appName');
+        let temp: string | undefined = workspace.getConfiguration().get('endpoints.express.appName');
         temp = temp ? temp : 'app|route|router';
 
         // if the settings didn't change, don't update the patterns

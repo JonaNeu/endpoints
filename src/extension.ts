@@ -5,7 +5,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let rootFolders = vscode.workspace.workspaceFolders;
 	let rootFolder = rootFolders === undefined ? undefined : rootFolders[0];
 
-	const endpointsProvider = new EndpointsProvider(rootFolder?.uri.fsPath);
+	const endpointsProvider = new EndpointsProvider(rootFolder ? rootFolder.uri.fsPath : null);
 	vscode.window.registerTreeDataProvider('endpoints', endpointsProvider);
 	vscode.commands.registerCommand('endpoints.refreshEntry', () => endpointsProvider.refresh());
 	

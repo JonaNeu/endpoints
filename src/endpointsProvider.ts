@@ -18,7 +18,7 @@ export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 	
 	private endpoints: Endpoint[];
 
-	constructor(private rootFolder: string | undefined) {
+	constructor(private rootFolder: string | null) {
 		this.javaParser = new JavaEndpointParser();
 		this.typescriptParser = new TypescriptEndpointParser();
 		this.pythonParser = new PythonEndpointParser();
@@ -87,7 +87,7 @@ export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 		if (!element) {
 			return Promise.resolve(this.endpoints.sort((a, b) => a.label.localeCompare(b.label)));
 		} else {
-			// return null objec,t as we don't support nesting yet
+			// return null object,t as we don't support nesting yet
 			vscode.window.showInformationMessage('Could not find any endpoints in current workspace');
 			return Promise.resolve([]);
 		}
