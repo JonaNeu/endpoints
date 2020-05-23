@@ -12,6 +12,7 @@ Currently supported languages and frameworks:
 * Python (Flask)
 * PHP (Laravel)
 
+It can be insatlled through the Marketplace: [https://marketplace.visualstudio.com/items?itemName=JonaNeumeier.endpoints](https://marketplace.visualstudio.com/items?itemName=JonaNeumeier.endpoints)
 
 ## Extension Settings
 
