@@ -1,8 +1,13 @@
 {
 	"name": "endpoints",
-	"displayName": "endpoints",
-	"description": "endpoints",
-	"version": "0.0.1",
+	"displayName": "Endpoints",
+	"description": "View and jump to all declared endpoints in the current project.",
+	"version": "1.0.0",
+	"icon": "resources/icon_128.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/JonaNeu/endpoints.git"
+	  },
 	"engines": {
 		"vscode": "^1.45.0"
 	},
@@ -40,7 +45,27 @@
 					"group": "navigation"
 				}
 			]
-		}
+		},
+		"configuration": [{
+			"title": "Endpoints",
+			"properties": {
+				"endpoints.files.include": {
+					"type": "string",
+					"default": "**/*.{java,php,ts,js,py}",
+					"description": "Glob pattern that is used to search all the files in the workspace."
+				},
+				"endpoints.files.exclude": {
+					"type": "string",
+					"default": "**/{test,node_modules}/{,**/}*.{java,php,ts,js,py}",
+					"description": "Glob pattern that are excluded when searching the files in the workspace."
+				},
+				"endpoints.express.appName": {
+					"type": "string",
+					"default": "app|route|router",
+					"description": "The variable name used for the express app. Multiple values should be separated by | ."
+				}
+			}
+		}]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

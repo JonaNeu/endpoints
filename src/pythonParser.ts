@@ -4,6 +4,8 @@ import { TreeItemCollapsibleState, Uri } from "vscode";
 import { EndpointParser } from "./parser";
 
 export class PythonEndpointParser implements EndpointParser {
+
+    // we search for patterns like @something.route()
     private routePattern = /\@[\s\S]*?\.route[\s\S]*?\([\s\S]*?(?:"|')([\s\S]*?)(?:"|')([\s\S]*?)\)/gi;
 
     public getEndpoints(code: string, uri: Uri): Endpoint[] {
@@ -11,7 +13,7 @@ export class PythonEndpointParser implements EndpointParser {
         let match: RegExpExecArray | null;
         let position: number = 0;
         
-        // GET MAPPINGS
+        // RETRIEVE MAPPINGS
         while ((match = this.routePattern.exec(code)) !== null) {
             position = this.routePattern.lastIndex;
 
@@ -27,7 +29,9 @@ export class PythonEndpointParser implements EndpointParser {
         return entries;
     }
 
-
+    /**
+     * extract all the methods from the found endpoint string
+     */
     private extractHttpMethods(match: string): HttpMethod[] {
 
         let result: HttpMethod[] = [];

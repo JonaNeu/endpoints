@@ -2,9 +2,6 @@ import * as vscode from 'vscode';
 import { EndpointsProvider } from './endpointsProvider';
 
 export function activate(context: vscode.ExtensionContext) {
-	// todo: create set for holding the endpoints, to avoid duplicates
-	// todo: allow setting the folder via the settings
-
 	let rootFolders = vscode.workspace.workspaceFolders;
 	let rootFolder = rootFolders === undefined ? undefined : rootFolders[0];
 
@@ -27,5 +24,5 @@ export function activate(context: vscode.ExtensionContext) {
 		}); 
 	});
 }
-// this method is called when your extension is deactivated
+
 export function deactivate() {}

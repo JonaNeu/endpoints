@@ -6,14 +6,18 @@ import { EndpointParser } from "./parser";
 export class JavaEndpointParser implements EndpointParser {
     
     private quotePattern = /("|').*("|')/g;
+    // extract value = "" from string
     private valuePattern = /value[\s\S]*?\=[\s\S]*?(("|')(([\s\S]*?))("|'))/gi;
+    // extract method = "" from string
     private methodPattern = /method[\s\S]*?\=[\s\S]*?(?:(?:"|')?(?:[\s\S]*?).*((POST|GET|DELETE|PUT|PATCH|HEAD|CONNECT|TRACE|OPTIONS)([\s\S]*?))("|')?)/gi;
-
-    // we want ot make sure that a @RestController or @Controller comes before
+    
+    // we want ot make sure that a @RestController or @Controller comes before and a class comes after it
     private globalRequestPattern = /(?:@RestController(?:[\s\S]*?)|@Controller(?:[\s\S]*?)){1}@RequestMapping\(([\s\S]*?)\)([\s\S]*?)class{1}/gi;
 
+    // we search for @RequestMapping("")
     private requestPattern = /@RequestMapping\(([\s\S]*?)\)/gi;
 
+    // we search for @GetMapping("")
     private getPattern = /@GetMapping\(([\s\S]*?)\)/gi;
     private postPattern = /@PostMapping\(([\s\S]*?)\)/gi;
     private putPattern = /@PutMapping\(([\s\S]*?)\)/gi;
@@ -31,10 +35,9 @@ export class JavaEndpointParser implements EndpointParser {
         let position: number = 0;
 
         // we first check if we have a global prefix for this class
-        code.match(this.globalRequestPattern)?.forEach((match) => {
-            // todo: broken for some use cases e.g. users-endpoint
-            prefix = this.extractPath(match);
-        });
+        while ((match = this.globalRequestPattern.exec(code)) !== null) {
+            prefix = this.extractPath(match[1]);
+        }
 
          // MAPPINGS FOR @RequestMapping
          while ((match = this.requestPattern.exec(code)) !== null) {
@@ -121,16 +124,13 @@ export class JavaEndpointParser implements EndpointParser {
             TreeItemCollapsibleState.None, position, { command: 'endpoints.openFile', title: '', arguments: [uri, position] }));
         }
 
-        // SAVE
-        // code.match(this.putPattern)?.forEach((match) => {
-        //     entries.push(new Endpoint(prefix + this.extractPath(match), HttpMethod.PUT, uri, 
-        //         TreeItemCollapsibleState.None, 27, { command: 'endpoints.openFile', title: '', arguments: [uri, 27] }));
-        // });
-
         return entries;
     }
 
 
+    /**
+     * Extract the path from the found endpoint string
+     */
     private extractPath(match: string): string {
         let path = '';
         
@@ -158,7 +158,9 @@ export class JavaEndpointParser implements EndpointParser {
         return path.substring(1, path.length - 1);
     }
 
-
+    /**
+     * Extract the http method from the found endpoint string
+     */
     private extractHttpMethod(match: string): HttpMethod {
 
         if (match.toLowerCase().includes("post")) {

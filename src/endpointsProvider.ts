@@ -4,6 +4,7 @@ import { JavaEndpointParser } from './javaParser';
 import { TypescriptEndpointParser } from './typescriptParser';
 import { PythonEndpointParser } from './pythonParser';
 import { PhpEndpointParser } from './phpParser';
+import path = require('path');
 
 export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 
@@ -14,6 +15,7 @@ export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 	private typescriptParser: TypescriptEndpointParser;
 	private pythonParser: PythonEndpointParser;
 	private phpParser: PhpEndpointParser;
+	
 	private endpoints: Endpoint[];
 
 	constructor(private rootFolder: string | undefined) {
@@ -26,10 +28,21 @@ export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 		this.getAllEndpoints();
 	}
 
+	/**
+	 * Search through all files and retrieve endpoints
+	 */
 	private async getAllEndpoints(): Promise<void> {
 		this.endpoints = [];
+
+		// get the glob patterns or take the default
+		let includePattern = vscode.workspace.getConfiguration().get('endpoints.files.include');
+		includePattern = includePattern ? includePattern : '**/*.{java,php,ts,js,py}';
+		
+		let excludePattern = vscode.workspace.getConfiguration().get('endpoints.files.exclude');
+		excludePattern = excludePattern ? excludePattern : '**/{test,node_modules}/{,**/}*.{java,php,ts,js,py}';
+
 		// get all files, but disregard test and node_modules directories
-		vscode.workspace.findFiles('**/*.{java,php,ts,js,py}', '**/{test,node_modules}/{,**/}*.{java,php,ts,js,py}').then((uris) => {
+		vscode.workspace.findFiles(<vscode.GlobPattern>includePattern, <vscode.GlobPattern>excludePattern).then((uris) => {
 			uris.forEach((uri) => {
 				vscode.workspace.openTextDocument(uri).then((doc) => {
 					switch(doc.languageId) { 
@@ -53,27 +66,18 @@ export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 					}
 
 					// update view after each file
-					this.refreshWithoutLoading();
+					this.reload();
 				  });
 				
 			});
 		});
 	}
 
-	refreshWithoutLoading(): void {
-		this._onDidChangeTreeData.fire(undefined);
-	} 
-
-	refresh(): void {
-		this.getAllEndpoints();
-		this._onDidChangeTreeData.fire(undefined);
-	}
-
-	getTreeItem(element: Endpoint): vscode.TreeItem {
+	public getTreeItem(element: Endpoint): vscode.TreeItem {
 		return element;
 	}
 
-	getChildren(element?: Endpoint): Thenable<Endpoint[]> {
+	public getChildren(element?: Endpoint): Thenable<Endpoint[]> {
 		
 		if (!this.rootFolder) {
 			vscode.window.showInformationMessage('Could not find any endpoints in current workspace');
@@ -88,6 +92,21 @@ export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 			return Promise.resolve([]);
 		}
 	}
+
+	/**
+	 * Refresh the endpoints and update the view
+	 */
+	public refresh(): void {
+		this.getAllEndpoints();
+		this.reload();
+	}
+
+	/**
+	 * Update the view
+	 */
+	private reload(): void {
+		this._onDidChangeTreeData.fire(undefined);
+	} 
 }
 
 export class Endpoint extends vscode.TreeItem {
@@ -111,7 +130,10 @@ export class Endpoint extends vscode.TreeItem {
 		return this.httpMethod;
 	}
 
-	// todo: add icon path
+	iconPath = {
+		light: path.join(__filename, '..', '..', 'resources', 'icon_black.svg'),
+		dark: path.join(__filename, '..', '..', 'resources', 'icon_white.svg')
+	};
 
 	contextValue = 'endpoint';
 

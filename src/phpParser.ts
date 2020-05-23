@@ -4,6 +4,7 @@ import { TreeItemCollapsibleState, Uri } from "vscode";
 import { EndpointParser } from "./parser";
 
 export class PhpEndpointParser implements EndpointParser {
+    // we search for patterns like Something::get()
     private getPattern = /\:\:get\((?:"|')([\s\S]*?)(?:"|')[\s\S]*?\)/gi;
     private postPattern = /\:\:post\((?:"|')([\s\S]*?)(?:"|')[\s\S]*?\)/gi;
     private putPattern = /\:\:put\((?:"|')([\s\S]*?)(?:"|')[\s\S]*?\)/gi;
