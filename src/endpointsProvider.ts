@@ -51,7 +51,7 @@ export class EndpointsProvider implements vscode.TreeDataProvider<Endpoint> {
 						   	break; 
 						}
 						case ProgrammingLanguage.javascript:
-						case ProgrammingLanguage.typescript: { 
+						case ProgrammingLanguage.typescript: { 							
 							this.endpoints = this.endpoints.concat(this.typescriptParser.getEndpoints(doc.getText(), uri));
 						   	break; 
 						}
@@ -127,7 +127,9 @@ export class Endpoint extends vscode.TreeItem {
 	}
 
 	get description(): string {
-		return this.httpMethod;
+		let path = this.uri.path;
+		let fileName = path.substring(path.lastIndexOf('/') + 1);
+		return `${this.httpMethod} - ${fileName}`;
 	}
 
 	iconPath = {
