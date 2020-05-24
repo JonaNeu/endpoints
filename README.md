@@ -20,7 +20,7 @@ This extension contributes the following settings:
 
 * `endpoints.files.include`: Glob pattern that is used to search all the files in the workspace. <br>
 Default: `**/*.{java,php,ts,js,py}`
-* `endpoints.files.include`: Glob pattern that are excluded when searching the files in the workspace. <br>
+* `endpoints.files.exclude`: Glob pattern that are excluded when searching the files in the workspace. <br>
 Default: `**/{test,node_modules}/{,**/}*.{java,php,ts,js,py}`
 * `endpoints.express.appName`: The variable name used for the express app. Multiple values should be separated by |. <br>
 Default: `app|route|router`

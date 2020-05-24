@@ -2,7 +2,7 @@
 	"name": "endpoints",
 	"displayName": "Endpoints",
 	"description": "View and jump to all declared endpoints in the current project.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "JonaNeumeier",
 	"icon": "resources/icon_128.png",
 	"repository": {
