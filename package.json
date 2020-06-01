@@ -5,6 +5,12 @@
 	"version": "1.0.1",
 	"publisher": "JonaNeumeier",
 	"icon": "resources/icon_128.png",
+	"keywords": [
+		"endpoints",
+        "routes",
+        "API",
+        "web-routes"
+    ],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/JonaNeu/endpoints.git"
